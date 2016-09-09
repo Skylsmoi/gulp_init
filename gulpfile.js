@@ -68,7 +68,8 @@ gulp.task('js', ['js_hint', 'js_sync'])
 gulp.task('dev', ['css','js']) // exec css and js in parallel
 gulp.task('prod', ['css','js'], function() {
     gulp.src(listCssFiles)
-        .pipe(sass().on('error', sass.logError))
+        //.pipe(sass().on('error', sass.logError))
+        .pipe(stylus())
         .pipe(cleanCSS({keepSpecialComments:0}))
         .pipe(concat('all.min.css'))
         .pipe(gulp.dest(_srcdir + '/dist/'))
