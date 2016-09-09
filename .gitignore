@@ -1,0 +1,8 @@
+# node modules for gulp
+node_modules
+
+# folder for aggregated js and css
+src/dist
+
+# es5 transpiled version of main.js
+src/js/scripts_es5.js
