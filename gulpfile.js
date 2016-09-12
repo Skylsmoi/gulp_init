@@ -1,9 +1,9 @@
 'use strict'
 
-const gulp        = require("gulp")
+const gulp        = require('gulp')
 const concat      = require('gulp-concat')
 const sass        = require('gulp-sass')
-const rename      = require("gulp-rename")
+const rename      = require('gulp-rename')
 const uglify      = require('gulp-uglify')
 const cleanCSS    = require('gulp-clean-css')
 const babel       = require('gulp-babel')
@@ -17,6 +17,7 @@ const autoprefixer= require('gulp-autoprefixer')
 const stylus      = require('gulp-stylus')
 
 const _srcdir = 'src/'
+const _tpldir = 'templates/'
 
 const listCssFiles = [
     _srcdir + 'css/styles.styl'
@@ -27,7 +28,7 @@ const listJsFiles = [
 
 // CSS task
 gulp.task('css', function () {
-    gulp.src(listCssFiles)
+    return gulp.src(listCssFiles)
         .pipe(expect({verbose: true}, listCssFiles))
         //.pipe(sass().on('error', sass.logError))
         .pipe(stylus())
@@ -42,20 +43,20 @@ gulp.task('css', function () {
 
 // JS tasks
 gulp.task('js_hint', function() {
-    gulp.src(_srcdir + '/js/scripts.js')
+    return gulp.src(_srcdir + '/js/scripts.js')
         .pipe(expect({verbose: true}, _srcdir + '/js/scripts.js'))
         .pipe(jshint())
         .pipe(jshint.reporter(stylish))
 })
 gulp.task('js_transpiling', function() {
-    gulp.src(_srcdir + '/js/scripts.js')
+    return gulp.src(_srcdir + '/js/scripts.js')
         .pipe(plumber())
         .pipe(babel({ presets: ['es2015'] }))
         .pipe(concat('scripts_es5.js'))
         .pipe(gulp.dest(_srcdir + '/js/'))
 })
 gulp.task('js_concat', function() {
-    gulp.src(listJsFiles)
+    return gulp.src(listJsFiles)
         .pipe(expect({verbose: true}, listJsFiles))
         .pipe(concat('all.js'))
         .pipe(gulp.dest(_srcdir + '/dist/'))
@@ -103,7 +104,7 @@ gulp.task('livesync', function() {
         port: 5001
     })
 
-    gulp.watch(_srcdir + "**/*.html").on('change', browserSync.reload);
+    gulp.watch(_tpldir + '**/*.html').on('change', browserSync.reload)
 })
 
 gulp.task('watchsync', ['watch', 'livesync'])
