@@ -108,3 +108,11 @@ gulp.task('livesync', function() {
 })
 
 gulp.task('watchsync', ['watch', 'livesync'])
+
+// DEFAULT task
+gulp.task('default', function () {
+  console.log(`
+    Usable tasks : watchsync, watch, dev, prod, js, css
+    Other available tasks : livesync, js_sync, js_concat, js_hint
+  `)
+})
