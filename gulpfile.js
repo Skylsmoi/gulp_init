@@ -3,6 +3,7 @@
 const gulp        = require('gulp')
 const concat      = require('gulp-concat')
 const sass        = require('gulp-sass')
+const stylus      = require('gulp-stylus')
 const rename      = require('gulp-rename')
 const uglify      = require('gulp-uglify')
 const cleanCSS    = require('gulp-clean-css')
@@ -14,7 +15,6 @@ const expect      = require('gulp-expect-file')
 const plumber     = require('gulp-plumber')
 const browserSync = require('browser-sync').create()
 const autoprefixer= require('gulp-autoprefixer')
-const stylus      = require('gulp-stylus')
 
 const _srcdir = 'src/'
 const _tpldir = 'templates/'
@@ -66,20 +66,21 @@ gulp.task('js_sync', gulpsync.sync(['js_transpiling', 'js_concat']))
 gulp.task('js', ['js_hint', 'js_sync'])
 
 // BUILD tasks
-gulp.task('dev', ['css','js']) // exec css and js in parallel
-gulp.task('prod', ['css','js'], function() {
-  gulp.src(listCssFiles)
-    //.pipe(sass().on('error', sass.logError))
-    .pipe(stylus())
-    .pipe(cleanCSS({keepSpecialComments:0}))
-    .pipe(concat('all.min.css'))
-    .pipe(gulp.dest(_srcdir + '/dist/'))
-
-  gulp.src(listJsFiles)
-    .pipe(concat('all.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest(_srcdir + '/dist/'))
+gulp.task('prod_css', ['css'], function () {
+    return gulp.src(_srcdir + '/dist/all.css')
+        .pipe(expect({verbose: true}, _srcdir + '/dist/all.css'))
+        .pipe(cleanCSS({keepSpecialComments:0}))
+        .pipe(concat('all.min.css'))
+        .pipe(gulp.dest(_srcdir + '/dist/'))
 })
+gulp.task('prod_js', ['js'], function () {
+    return gulp.src(_srcdir + '/dist/all.js')
+        .pipe(expect({verbose: true}, _srcdir + '/dist/all.js'))
+        .pipe(uglify())
+        .pipe(concat('all.min.js'))
+        .pipe(gulp.dest(_srcdir + '/dist/'))
+})
+gulp.task('prod', ['prod_css', 'prod_js'])
 
 // WATCH task
 gulp.task('watch', function () {
@@ -113,6 +114,6 @@ gulp.task('watchsync', ['watch', 'livesync'])
 gulp.task('default', function () {
   console.log(`
     Usable tasks : watchsync, watch, dev, prod, js, css
-    Other available tasks : livesync, js_sync, js_concat, js_hint
+    Other available tasks : livesync, js_sync, js_concat, js_hint, prod_css, prod_js
   `)
 })
