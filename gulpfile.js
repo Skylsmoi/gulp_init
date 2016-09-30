@@ -15,6 +15,7 @@ const expect      = require('gulp-expect-file')
 const plumber     = require('gulp-plumber')
 const browserSync = require('browser-sync').create()
 const autoprefixer= require('gulp-autoprefixer')
+const rewriteCSS  = require('gulp-rewrite-css')
 
 const _srcdir = 'src/'
 const _tpldir = 'templates/'
@@ -28,8 +29,14 @@ const listJsFiles = [
 
 // CSS task
 gulp.task('css', function () {
+  const dest = _srcdir + '/dist/'
+
   return gulp.src(listCssFiles)
     .pipe(expect({verbose: true}, listCssFiles))
+    .pipe(rewriteCSS({
+        destination: dest,
+        //debug: true
+    }))
     //.pipe(sass().on('error', sass.logError))
     .pipe(stylus())
     .pipe(autoprefixer({
@@ -37,7 +44,7 @@ gulp.task('css', function () {
         cascade: false
     }))
     .pipe(concat('all.css'))
-    .pipe(gulp.dest(_srcdir + '/dist/'))
+    .pipe(gulp.dest(dest))
     .pipe(browserSync.stream())
 })
 
