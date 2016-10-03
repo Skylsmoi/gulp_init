@@ -107,6 +107,7 @@ gulp.task('watch', function () {
 // LIVERELOAD task
 gulp.task('livesync', function() {
   browserSync.init({
+    ghostMode: false, // comment this line to mirror input click and scroll on all opened browsers
     proxy: "127.0.0.1:5000",
     browser: "chromium",
     port: 5001
